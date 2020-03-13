@@ -84,6 +84,7 @@ public class GameElementDetection {
 	 * Parses all the important parts of the game taking in a simplified screen shot
 	 * @param img the image to process 17x15 pixels
 	 */
+	@SuppressWarnings ("unchecked")
 	public void detect(BufferedImage img) {
 		// clear the last snake parts
 		lastSnakeParts.clear();
