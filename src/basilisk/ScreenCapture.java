@@ -8,8 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 // import java.awt.image.VolatileImage;
 
-public class ScreenCapture 
-{
+public class ScreenCapture {
 	// Java robot handles interactions with user's screen
 	private Robot screenCapture;
 	// Rectangle where to record the screen
@@ -20,16 +19,12 @@ public class ScreenCapture
 	/**
 	 * Creates a new Screen Capture instance recording the entire screen
 	 */
-	public ScreenCapture()
-	{
+	public ScreenCapture() {
 		// Attempt to initialize the java Robot
-		try
-		{
+		try {
 			screenCapture = new Robot();
 			screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-		} 
-		catch (java.awt.AWTException e)
-		{
+		} catch (java.awt.AWTException e) {
 			System.out.println("critical error when initializing screen capture, exception - " + e);
 			System.exit(-1);
 			// Runtime.getRuntime().exit(-1);
@@ -43,8 +38,7 @@ public class ScreenCapture
 	 * TODO: possibly change from BufferedImage to VolatileImage for better performance?
 	 * @see https://stackoverflow.com/questions/11514929/current-state-of-bufferedimage-vs-volatileimage
 	 */
-	public BufferedImage getFrame()
-	{
+	public BufferedImage getFrame() {
 		captureFrame = screenCapture.createScreenCapture(screenRect);
 		// return resizeImg(captureFrame, 300, 300);
 		return captureFrame;
@@ -60,8 +54,7 @@ public class ScreenCapture
 	 * @see https://stackoverflow.com/questions/9417356/bufferedimage-resize
 	 * TODO: find a better way to reuse the Graphics2D g2d object
 	 */
-	public static BufferedImage resizeImg(BufferedImage imgToResize, int newWidth, int newHeight) 
-	{
+	public static BufferedImage resizeImg(BufferedImage imgToResize, int newWidth, int newHeight) {
 		Image tmp = imgToResize.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 		BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 
@@ -79,8 +72,7 @@ public class ScreenCapture
 	 * @param newLength the width of the area to record
 	 * @param newHeight the height of the area to record
 	 */
-	public void setPositionFromCords(int x1, int y1, int newLength, int newHeight)
-	{
+	public void setPositionFromCords(int x1, int y1, int newLength, int newHeight) {
 		screenRect = new Rectangle(x1, y1, newLength, newHeight);
 		System.out.println("changing recording location to: x1 - > " + x1 + ", y1 -> " + y1 + ", x2 -> " + (x1 + newLength) + ", y2 -> " + (y1 + newHeight));
 	}
