@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 // The main entry method for java programs
 public class Main {
-    public static void main(String[] args) {
+    static public void main(String[] args) {
         // Create a new basilisk program
         Basilisk basilisk = new Basilisk();
 
