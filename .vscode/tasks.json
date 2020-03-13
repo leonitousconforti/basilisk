@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Program",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "command": "rm ${workspaceRoot}/bin/Basilisk.jar & jar cvfm ${workspaceRoot}/bin/Basilisk.jar ${workspaceRoot}/bin/manifest.mf -C ${workspaceRoot}/bin/ .",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated"
+      },
+      "args": [
+        // "--force",
+        // "--sketch=${workspaceRoot}",
+        // "--output=${workspaceRoot}/out",
+        // "--run"
+      ],
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Main<basilisk>",
+            "request": "launch",
+            "mainClass": "basilisk.Main",
+            "projectName": "basilisk"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-PApplet<basilisk>",
+            "request": "launch",
+            "mainClass": "processing.core.PApplet",
+            "projectName": "basilisk"
+        }
+    ]
+}
