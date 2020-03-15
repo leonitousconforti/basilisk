@@ -48,6 +48,7 @@ public class Basilisk extends PApplet {
 			Config.screenConfig = Config.SCREEN_1440x900;
 
 			// Default config when your screen is 1440x900. Does not take into account things like bookmark bar and such
+			// screenCapture.setPositionFromCords( loadingScreen.setupGame() );
 			screenCapture.setPositionFromCords(420, 205, 600, 600);
 		} else {
 			// Not running on a supported screen size
@@ -58,6 +59,10 @@ public class Basilisk extends PApplet {
 		try {
 			TimeUnit.SECONDS.sleep(1);
 		} catch(InterruptedException e) {}
+
+		// Set the apple color based on what game mode you are playing
+		gameImg = screenCapture.getFrame();
+		gameElementDetection.setAppleColor(gameImg);
 	}
 
 	// Main run loop for the AI, runs in its own thread
@@ -101,7 +106,7 @@ public class Basilisk extends PApplet {
     public void setup() {
 		// Setup the processing surface
         background(51);
-		frameRate(10);
+		frameRate(30);
 		surface.setAlwaysOnTop(true);
 		surface.setLocation(100, (Toolkit.getDefaultToolkit().getScreenSize().height) / 2 - height / 2);
 
@@ -138,9 +143,9 @@ public class Basilisk extends PApplet {
 		// The iterators returned by this class's iterator and listIterator methods are fail-fast: if the list is 
 		// structurally modified at any time after the iterator is created, in any way except through the iterator 
 		// own remove or add methods, the iterator will throw a ConcurrentModificationException.
-		for (Point p : gameElementDetection.getSnakeParts()) {
-			rect(p.x * 32 + 28, p.y * 32 + 95, 32, 32);
-		}
+		// for (Point p : gameElementDetection.getSnakeParts()) {
+		// 	rect(p.x * 32 + 28, p.y * 32 + 95, 32, 32);
+		// }
 
 		// Draw where we think the snake head is
 		fill(0);

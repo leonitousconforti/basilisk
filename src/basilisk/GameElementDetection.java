@@ -20,11 +20,11 @@ public class GameElementDetection {
 	private float snakeColorHue = Color.RGBtoHSB(rgbSnakeColor.getRed(), rgbSnakeColor.getGreen(), rgbSnakeColor.getBlue(), null)[0] * 255;
 	
 	// The color used to identify the apples
-	private Color rgbAppleColor = new Color(91, 28, 11);
+	private Color rgbAppleColor = new Color(223, 48, 24);
 	
 	// The previous apple position is used to tell weather or not a new a-star path needs to be calculated.
 	// Only when the apple has changed positions (ie. eaten) or the snake is not on track then a new a-star path needs to be calculated.
-	private Point previousApplePos = new Point(0, 0);
+	private Point previousApplePos = new Point(-1, -1);
 	
 	// The snake parts from the most recently processed frame are save to differentiate where the head is.
 	// the basic detection relies on colors and since it only detect colors, it is impossible to identify what part
@@ -39,11 +39,29 @@ public class GameElementDetection {
 
 	// Rectangle where to capture the game data
 	private final Rectangle gameDataRasterRectangle = new Rectangle(28, 95, 544, 480);
+
+	// Rectangle where to capture the apple color
+	private final Point appleColorRasterRectangle = new Point(39, 39);
 	
 	// A raster buffer to write data to when performing the shrink process
 	private BufferedImage gameRasterImage = new BufferedImage(17, 15, BufferedImage.TYPE_INT_RGB);
 
 	public GameElementDetection() {
+	}
+
+	/**
+	 * Sets the apple color using the object in the upper left hand corner
+	 * @param img the screen show of the game window
+	 */
+	public void setAppleColor(BufferedImage img) {
+		// Convert from quadrant space to pixel space for the input image
+		int x = appleColorRasterRectangle.x;
+		int y = appleColorRasterRectangle.y;
+
+		// Get the color and then set the color
+		Color appleColorInWindow = new Color( img.getRGB(x, y) );
+		rgbAppleColor = appleColorInWindow;
+		System.out.println(rgbAppleColor);
 	}
 
 	/**
@@ -84,7 +102,7 @@ public class GameElementDetection {
 	 * Parses all the important parts of the game taking in a simplified screen shot
 	 * @param img the image to process 17x15 pixels
 	 */
-	@SuppressWarnings ("unchecked")
+	@SuppressWarnings ("unchecked") // Specifically for the cast from "snakeParts.clone()" back to ArrayList<Point>
 	public void detect(BufferedImage img) {
 		// clear the last snake parts
 		lastSnakeParts.clear();
@@ -109,7 +127,7 @@ public class GameElementDetection {
 				float hueAtPixel = hsbValues[0] * 255;
 
 				// Compare what the expected apple color to be to the color of the current pixel
-				if (colorAtPixel == rgbAppleColor) {
+				if (colorAtPixel.getRGB() == rgbAppleColor.getRGB()) {
 					// If true then we found the apple
 					applePos.x = x;
 					applePos.y = y;
