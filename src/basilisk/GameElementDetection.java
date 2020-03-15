@@ -202,7 +202,9 @@ public class GameElementDetection {
 	 * Gets all the parts of the snake
 	 * @return {ArrayList<Point>} snakeParts
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<Point> getSnakeParts() {
-		return snakeParts;
+		// return snakeParts;
+		return (ArrayList<Point>) snakeParts.clone();
 	}
 }

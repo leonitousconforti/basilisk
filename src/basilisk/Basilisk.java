@@ -139,13 +139,14 @@ public class Basilisk extends PApplet {
 		stroke(100, 100, 200);
 		// TODO: fix concurrent modification exception
 		// see https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
-
+		// Fixed 03/14/20
+		
 		// The iterators returned by this class's iterator and listIterator methods are fail-fast: if the list is 
 		// structurally modified at any time after the iterator is created, in any way except through the iterator 
 		// own remove or add methods, the iterator will throw a ConcurrentModificationException.
-		// for (Point p : gameElementDetection.getSnakeParts()) {
-		// 	rect(p.x * 32 + 28, p.y * 32 + 95, 32, 32);
-		// }
+		for (Point p : gameElementDetection.getSnakeParts()) {
+			rect(p.x * 32 + 28, p.y * 32 + 95, 32, 32);
+		}
 
 		// Draw where we think the snake head is
 		fill(0);
