@@ -61,7 +61,6 @@ public class GameElementDetection {
 		// Get the color and then set the color
 		Color appleColorInWindow = new Color( img.getRGB(x, y) );
 		rgbAppleColor = appleColorInWindow;
-		System.out.println(rgbAppleColor);
 	}
 
 	/**
@@ -202,9 +201,42 @@ public class GameElementDetection {
 	 * Gets all the parts of the snake
 	 * @return {ArrayList<Point>} snakeParts
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Specifically for the cast from "snakeParts.clone()" back to ArrayList<Point>
 	public ArrayList<Point> getSnakeParts() {
 		// return snakeParts;
 		return (ArrayList<Point>) snakeParts.clone();
+	}
+
+	/**
+	 * Updates the apple color to a the new provided color
+	 * @param color the new apple color
+	 */
+	public void setAppleColor(Color color) {
+		rgbAppleColor = color;
+	}
+
+	/**
+	 * Get the current apple color
+	 * @return rgbAppleColor
+	 */
+	public Color getAppleColor() {
+		return rgbAppleColor;
+	}
+
+	/**
+	 * Updates the snake color to a new provided color and recalculates snake hue
+	 * @param color the new snake color
+	 */
+	public void setSnakeColor(Color color) {
+		rgbSnakeColor = color;
+		snakeColorHue = Color.RGBtoHSB(rgbSnakeColor.getRed(), rgbSnakeColor.getGreen(), rgbSnakeColor.getBlue(), null)[0] * 255;
+	}
+
+	/**
+	 * Get the current snake color
+	 * @return rgbSnakeColor
+	 */
+	public Color getSnakeColor() {
+		return rgbSnakeColor;
 	}
 }
