@@ -12,41 +12,53 @@ import java.awt.image.BufferedImage;
 
 public class GameElementDetection {
 	// TODO: move variable initializations to class constructor
+	// Fixed 3/16/20
 
 	// The color used to identify snake parts
-	private Color rgbSnakeColor = new Color(65, 100, 240);
+	private Color rgbSnakeColor;
 
 	// private float snakeColorHue1 = Color.RGBtoHSB((rgbSnakeColor >> 16) & 0xff, (rgbSnakeColor >> 8) & 0xff, rgbSnakeColor & 0xff, null);
-	private float snakeColorHue = Color.RGBtoHSB(rgbSnakeColor.getRed(), rgbSnakeColor.getGreen(), rgbSnakeColor.getBlue(), null)[0] * 255;
+	private float snakeColorHue;
 	
 	// The color used to identify the apples
-	private Color rgbAppleColor = new Color(223, 48, 24);
+	private Color rgbAppleColor;
 	
 	// The previous apple position is used to tell weather or not a new a-star path needs to be calculated.
 	// Only when the apple has changed positions (ie. eaten) or the snake is not on track then a new a-star path needs to be calculated.
-	private Point previousApplePos = new Point(-1, -1);
+	private Point previousApplePos;
 	
 	// The snake parts from the most recently processed frame are save to differentiate where the head is.
 	// the basic detection relies on colors and since it only detect colors, it is impossible to identify what part
 	// is part of the snake body or if it is the snake head. Thus, if the difference between the two frames (current vs previous)
 	// shows some result where there is a new snake part, then we know it is the snake head and not a snake part; everything else would be a snake part.
-	private ArrayList<Point> snakeParts = new ArrayList<Point>();
-	private ArrayList<Point> lastSnakeParts = new ArrayList<Point>();
+	private ArrayList<Point> snakeParts;
+	private ArrayList<Point> lastSnakeParts;
 
 	// Save the final determined positions for each object
-	private Point applePos = new Point(0, 0);
-	private Point snakeHead = new Point(0, 0);
+	private Point applePos;
+	private Point snakeHead;
 
 	// Rectangle where to capture the game data
-	private final Rectangle gameDataRasterRectangle = new Rectangle(28, 95, 544, 480);
+	private final Rectangle gameDataRasterRectangle;
 
 	// Rectangle where to capture the apple color
-	private final Point appleColorRasterRectangle = new Point(12, 7);
+	private final Point appleColorRasterRectangle;
 	
 	// A raster buffer to write data to when performing the shrink process
-	private BufferedImage gameRasterImage = new BufferedImage(17, 15, BufferedImage.TYPE_INT_RGB);
+	private BufferedImage gameRasterImage;
 
 	public GameElementDetection() {
+		rgbSnakeColor = new Color(65, 100, 240);
+		snakeColorHue = Color.RGBtoHSB(rgbSnakeColor.getRed(), rgbSnakeColor.getGreen(), rgbSnakeColor.getBlue(), null)[0] * 255;
+		rgbAppleColor = new Color(223, 48, 24);
+		previousApplePos = new Point(-1, -1);
+		snakeParts = new ArrayList<Point>();
+		lastSnakeParts = new ArrayList<Point>();
+		applePos = new Point(-1, -1);
+		snakeHead = new Point(-1, -1);
+		gameDataRasterRectangle = new Rectangle(28, 95, 544, 480);
+		appleColorRasterRectangle = new Point(12, 7);
+		gameRasterImage = new BufferedImage(17, 15, BufferedImage.TYPE_INT_RGB);
 	}
 
 	/**
