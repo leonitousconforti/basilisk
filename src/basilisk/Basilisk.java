@@ -1,20 +1,21 @@
 package basilisk;
 
-import java.awt.Point;
 import java.util.Arrays;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
+import processing.core.PApplet;
 // import basilisk.*;
-import processing.core.*;
 
 /**
  * Basilisk is an artificial intelligence program designed to play the google snake game perfectly.
  * Its core is written algorithms are written in Java, however, it also uses Processing to create
  * an optional graphical UI to display stats to the user.
  */
-public class Basilisk extends PApplet {
+public class Basilisk {
+	// GUI
+	private final Gui gui;
 	// Screen capture for recording the screen
 	private final ScreenCapture screenCapture;
 	// Game element detection for finding the snake and apple
@@ -25,10 +26,18 @@ public class Basilisk extends PApplet {
 	// Creates a new Basilisk instance
 	public Basilisk() {
 		// Initialize variables
+		gui = new Gui();
 		gameElementDetection = new GameElementDetection();
 		screenCapture = new ScreenCapture();
-
 		init();
+
+		// Start the AI in a new thread
+		new Thread(run()).start();
+
+		// Initialize the other half of the basilisk program with a Processing window
+        // to display the graphical UI for the user.
+        String[] processingArgs = { "Basilisk" };
+        PApplet.runSketch(processingArgs, gui);
 	}
 
 	// Initialize method
@@ -80,6 +89,12 @@ public class Basilisk extends PApplet {
 					gameImg = screenCapture.getFrame();
 					elementsImage = gameElementDetection.shrinkProcess(gameImg);
 					gameElementDetection.detect(elementsImage);
+					gui.update(
+						gameElementDetection.getApplePos(), 
+						gameElementDetection.getSnakeHead(), 
+						gameElementDetection.getSnakeParts(),
+						gameImg
+					);
 
 					// Calculate the loop timings
 					double fps = 1 / ((System.nanoTime() - startTime) / 1000000000.0);
@@ -88,69 +103,5 @@ public class Basilisk extends PApplet {
 			}
 
 		};
-	}
-
-	// Processing settings method
-	@Override
-    public void settings() {
-		// Create the window based on the screen size
-		if (Config.screenConfig == Config.SCREEN_1920x1080) {
-			size(600, 600);
-		} else if (Config.screenConfig == Config.SCREEN_1440x900) {
-			size(300, 300);
-		}
-	}
-
-	// Processing setup method
-    @Override
-    public void setup() {
-		// Setup the processing surface
-        background(51);
-		frameRate(30);
-		surface.setAlwaysOnTop(true);
-		surface.setLocation(100, (Toolkit.getDefaultToolkit().getScreenSize().height) / 2 - height / 2);
-
-		// Start the AI in a new thread
-		new Thread(run()).start();
-    }
-
-	// Processing loop method
-	@Override
-    public void draw() {
-		// Draw the current screen shot
-		image( new PImage( ScreenCapture.resizeImg(gameImg, 300, 300) ), 0, 0 );
-
-		// Scale the elements in the PApplet according to the screen size
-		if (Config.screenConfig == Config.SCREEN_1920x1080) {
-			scale( (float) 1 );
-		} else if (Config.screenConfig == Config.SCREEN_1440x900) {
-			scale( (float) 1/2 );
-		}
-
-		// Draw where we think the apple is
-		strokeWeight(6);
-		fill(255);
-		stroke(200, 100, 200);
-		ellipse(gameElementDetection.getApplePos().x * 32 + 28 + 16, gameElementDetection.getApplePos().y * 32 + 95 + 16, 32, 32);
-
-		// Draw all the snake parts we found
-		strokeWeight(6);
-		fill(255);
-		stroke(100, 100, 200);
-		// TODO: fix concurrent modification exception
-		// see https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
-		// Fixed 03/14/20
-		
-		// The iterators returned by this class's iterator and listIterator methods are fail-fast: if the list is 
-		// structurally modified at any time after the iterator is created, in any way except through the iterator 
-		// own remove or add methods, the iterator will throw a ConcurrentModificationException.
-		for (Point p : gameElementDetection.getSnakeParts()) {
-			rect(p.x * 32 + 28, p.y * 32 + 95, 32, 32);
-		}
-
-		// Draw where we think the snake head is
-		fill(0);
-		noStroke();
-		rect(28 + gameElementDetection.getSnakeHead().x * 32, 95 + gameElementDetection.getSnakeHead().y * 32, 32, 32);
 	}
 }
