@@ -41,7 +41,7 @@ public class GameElementDetection {
 	private final Rectangle gameDataRasterRectangle = new Rectangle(28, 95, 544, 480);
 
 	// Rectangle where to capture the apple color
-	private final Point appleColorRasterRectangle = new Point(39, 39);
+	private final Point appleColorRasterRectangle = new Point(12, 7);
 	
 	// A raster buffer to write data to when performing the shrink process
 	private BufferedImage gameRasterImage = new BufferedImage(17, 15, BufferedImage.TYPE_INT_RGB);
@@ -55,8 +55,8 @@ public class GameElementDetection {
 	 */
 	public void setAppleColor(BufferedImage img) {
 		// Convert from quadrant space to pixel space for the input image
-		int x = appleColorRasterRectangle.x;
-		int y = appleColorRasterRectangle.y;
+		int x = appleColorRasterRectangle.x * 32 + 16 + gameDataRasterRectangle.x;
+		int y = appleColorRasterRectangle.y * 32 + 16 + gameDataRasterRectangle.y;
 
 		// Get the color and then set the color
 		Color appleColorInWindow = new Color( img.getRGB(x, y) );
