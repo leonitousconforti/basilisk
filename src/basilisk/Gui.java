@@ -21,10 +21,10 @@ public class Gui extends PApplet {
 
     /**
      * Updates the elements on the screen to their new positions
-     * @param applePos the position of the apple
-     * @param snakeHead the position of the snake head
-     * @param snakeParts an arraylist of all the snake parts
-     * @param gameImg the frame of the game image
+     * @param _applePos the position of the apple
+     * @param _snakeHead the position of the snake head
+     * @param _snakeParts an arraylist of all the snake parts
+     * @param _gameImg the frame of the game image
      */
     public void update(Point _applePos, Point _snakeHead, ArrayList<Point> _snakeParts, BufferedImage _gameImg) {
         applePos = _applePos;
