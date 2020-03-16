@@ -89,6 +89,8 @@ public class Basilisk {
 					gameImg = screenCapture.getFrame();
 					elementsImage = gameElementDetection.shrinkProcess(gameImg);
 					gameElementDetection.detect(elementsImage);
+					
+					// Update the GUI
 					gui.update(
 						gameElementDetection.getApplePos(), 
 						gameElementDetection.getSnakeHead(), 
@@ -98,7 +100,13 @@ public class Basilisk {
 
 					// Calculate the loop timings
 					double fps = 1 / ((System.nanoTime() - startTime) / 1000000000.0);
-					System.out.println("loop took: " + (System.nanoTime() - startTime) / 1000000.0 + " ms, processing at: " + fps + " frames per second");
+					double ms = (System.nanoTime() - startTime) / 1000000.0;
+
+					// Format number to two decimal places to look nicer in console
+					fps = (double) Math.round(fps * 100) / 100;
+					ms = (double) Math.round(ms * 100) / 100;
+
+					System.out.println("AI loop took: " + ms + " ms, processing at: " + fps + " frames per second");
 				}
 			}
 
