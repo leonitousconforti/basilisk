@@ -1,7 +1,12 @@
 package basilisk;
 
+import java.net.URI;
+import java.awt.Point;
+import java.awt.Desktop;
 import java.util.Arrays;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
@@ -22,22 +27,31 @@ public class Basilisk {
 	private final GameElementDetection gameElementDetection;
 	// The current frames being worked on
 	private BufferedImage gameImg, elementsImage;
+	// The fps rate
+	private double fps;
 
 	// Creates a new Basilisk instance
 	public Basilisk() {
 		// Initialize variables
-		gui = new Gui();
 		gameElementDetection = new GameElementDetection();
 		screenCapture = new ScreenCapture();
+		gui = new Gui(this);
 		init();
 
 		// Start the AI in a new thread
-		new Thread(run()).start();
+		new Thread( run() ).start();
 
 		// Initialize the other half of the basilisk program with a Processing window
         // to display the graphical UI for the user.
         String[] processingArgs = { "Basilisk" };
-        PApplet.runSketch(processingArgs, gui);
+		PApplet.runSketch(processingArgs, gui);
+		
+		// Enable debug logs
+		Config.showAiDebugs = false;
+		Config.showAnimationDebugs = false;
+
+		Config.loading = false;
+		Config.showGameDetection = true;
 	}
 
 	// Initialize method
@@ -71,7 +85,7 @@ public class Basilisk {
 
 		// Set the apple color based on what game mode you are playing
 		gameImg = screenCapture.getFrame();
-		gameElementDetection.setAppleColor(gameImg);
+		gameElementDetection.setAppleColor(gameImg, new Point(12, 7));
 	}
 
 	// Main run loop for the AI, runs in its own thread
@@ -82,6 +96,23 @@ public class Basilisk {
 			public void run() {
 				// Main control loop
 				while (true) {
+
+					// Only run when the program is not paused!
+					// TODO: Research better ways to stall thread until boolean changes?
+					// see: https://stackoverflow.com/questions/44660137/how-check-boolean-value-until-it-is-true?noredirect=1&lq=1
+					// see: https://stackoverflow.com/questions/19025366/wait-until-boolean-value-changes-it-state
+					
+					// while ((Config.paused) || (Config.loading));
+					// Potentially change to this for better performance?
+					while ((Config.paused) || (Config.loading)) {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							System.out.println("Something interrupted the AI thread: " + e);
+							e.printStackTrace();
+						}
+					}
+
 					// Start a timer for loop timing
 					double startTime = System.nanoTime();
 
@@ -90,26 +121,83 @@ public class Basilisk {
 					elementsImage = gameElementDetection.shrinkProcess(gameImg);
 					gameElementDetection.detect(elementsImage);
 					
-					// Update the GUI
-					gui.update(
-						gameElementDetection.getApplePos(), 
-						gameElementDetection.getSnakeHead(), 
-						gameElementDetection.getSnakeParts(),
-						gameImg
-					);
+					// Update the GUI:
+					// gui.update(
+					// 	gameElementDetection.getApplePos(), 
+					// 	gameElementDetection.getSnakeHead(), 
+					// 	gameElementDetection.getSnakeParts(),
+					// 	gameImg
+					// );
+
+					// Two methods, they both do the same thing. Offloads some of the work to the animation tread
+					gui.update();
+
+					// Run the path finding algorithm
+					// algorithm.run();
 
 					// Calculate the loop timings
-					double fps = 1 / ((System.nanoTime() - startTime) / 1000000000.0);
+					fps = 1 / ((System.nanoTime() - startTime) / 1000000000.0);
 					double ms = (System.nanoTime() - startTime) / 1000000.0;
 
 					// Format number to two decimal places to look nicer in console
 					fps = (double) Math.round(fps * 100) / 100;
 					ms = (double) Math.round(ms * 100) / 100;
 
-					System.out.println("AI loop took: " + ms + " ms, processing at: " + fps + " frames per second");
-				}
-			}
+					// Print Debug logs
+					if (Config.showAiDebugs) {
+						System.out.println("AI loop took: " + ms + " ms, processing at: " + fps + " frames per second");
+					}
+				} // End loop
+			} // End override run method
 
-		};
+		}; // End runnable type
+	} // End basilisk run method
+
+	// Open the play google snake page
+	public static final void openSnakeInGoogleWindow() {
+		try {
+            // String[] s = new String[] {"Google Chrome", "https://www.google.com/search?q=play%20snake"};
+            // Runtime.getRuntime().exec(s);
+            URI uri = new URI("https://www.google.com/search?q=play%20snake");
+			Desktop.getDesktop().browse( uri );
+		
+		// Catch any exceptions
+        } catch (IOException ignore) {
+            System.out.println("Could not launch chrome, error: " + ignore);
+        } catch (URISyntaxException ignore) {
+            System.out.println("Could not launch chrome, error: " + ignore);
+        } 
+	}
+
+	/**
+	 * Get the current game element detection object
+	 * @return GameElementDetection
+	 */
+	public final GameElementDetection getGameElementDetection() {
+		return this.gameElementDetection;
+	}
+
+	/**
+	 * Get the current screen capture object
+	 * @return ScreenCapture
+	 */
+	public final ScreenCapture getScreenCapture() {
+		return this.screenCapture;
+	}
+
+	/**
+	 * Get the current images being used by the AI, see what the AI sees
+	 * @return gameImages
+	 */
+	public BufferedImage[] getProcessedGameImages() {
+		return new BufferedImage[] { gameImg, elementsImage };
+	}
+
+	/**
+	 * Get the fps rate the AI is processing at
+	 * @return fps
+	 */
+	public double fps() {
+		return this.fps;
 	}
 }
