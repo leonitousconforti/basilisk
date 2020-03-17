@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;
-// import basilisk.*;
+import basilisk.algorithms.shared.*;
 
 /**
  * Basilisk is an artificial intelligence program designed to play the google snake game perfectly.
@@ -27,15 +27,18 @@ public class Basilisk {
 	private final GameElementDetection gameElementDetection;
 	// The current frames being worked on
 	private BufferedImage gameImg, elementsImage;
+	// The current AI algorithm running
+	private Algorithm algorithm;
 	// The fps rate
 	private double fps;
 
 	// Creates a new Basilisk instance
 	public Basilisk() {
-		// Initialize variables
+		// Initialize components
 		gameElementDetection = new GameElementDetection();
 		screenCapture = new ScreenCapture();
 		gui = new Gui(this);
+		algorithm = new Algorithm( null );
 		init();
 
 		// Start the AI in a new thread
@@ -129,11 +132,20 @@ public class Basilisk {
 					// 	gameImg
 					// );
 
-					// Two methods, they both do the same thing. Offloads some of the work to the animation tread
+					// Two methods, they both do the same thing. Offloads a little work to the animation tread
 					gui.update();
-
+					
 					// Run the path finding algorithm
-					// algorithm.run();
+					algorithm.run();
+
+					// Get the next action from the algorithm and check it
+					Action act = algorithm.getActionManager().getNextAction();
+					boolean ready = algorithm.getActionManager().checkAction(act, gameElementDetection.getSnakeHead());
+
+					// If the snake is in the right position, GO!
+					if (ready) {
+						algorithm.getActionManager().go(act);
+					}
 
 					// Calculate the loop timings
 					fps = 1 / ((System.nanoTime() - startTime) / 1000000000.0);
