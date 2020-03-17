@@ -17,7 +17,7 @@ public class GameElementDetection {
 	// The color used to identify snake parts
 	private Color rgbSnakeColor;
 
-	// private float snakeColorHue1 = Color.RGBtoHSB((rgbSnakeColor >> 16) & 0xff, (rgbSnakeColor >> 8) & 0xff, rgbSnakeColor & 0xff, null);
+	// private float snakeColorHue = Color.RGBtoHSB((rgbSnakeColor >> 16) & 0xff, (rgbSnakeColor >> 8) & 0xff, rgbSnakeColor & 0xff, null);
 	private float snakeColorHue;
 	
 	// The color used to identify the apples
@@ -64,11 +64,29 @@ public class GameElementDetection {
 	/**
 	 * Sets the apple color using the object in the upper left hand corner
 	 * @param img the screen show of the game window
+	 * @param point the point where to sample to color from, use null for default point @ (12, 7)
 	 */
-	public void setAppleColor(BufferedImage img) {
-		// Convert from quadrant space to pixel space for the input image
-		int x = appleColorRasterRectangle.x * 32 + 16 + gameDataRasterRectangle.x;
-		int y = appleColorRasterRectangle.y * 32 + 16 + gameDataRasterRectangle.y;
+	public void setAppleColor(BufferedImage img, Point point) {
+		int x, y;
+
+		// If no point was provided, use the default point @ (12, 7)
+		if (point == null) {
+			// Convert from quadrant space to pixel space for the input image
+			x = appleColorRasterRectangle.x * 32 + 16 + gameDataRasterRectangle.x;
+			y = appleColorRasterRectangle.y * 32 + 16 + gameDataRasterRectangle.y;
+		} else {
+			// If the user provided pixel points not coordinate points
+			if ((point.x > 17) || (point.y > 15) || (point.x < 0) || (point.y < 0)) {
+				// Keep the point in terms o pixel space
+				x = point.x;
+				y = point.y;
+			}
+			else {
+				// Convert from quadrant space to pixel space for the input image
+				x = point.x * 32 + 16 + gameDataRasterRectangle.x;
+				y = point.y * 32 + 16 + gameDataRasterRectangle.y;
+			}
+		}
 
 		// Get the color and then set the color
 		Color appleColorInWindow = new Color( img.getRGB(x, y) );
