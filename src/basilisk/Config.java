@@ -1,5 +1,6 @@
 package basilisk;
 
+// Config variables shared throughout the entire application
 public class Config {
     public static int screenConfig = 0;
 
@@ -21,12 +22,4 @@ public class Config {
 
     public static boolean showAiDebugs = false;
     public static boolean showAnimationDebugs = false;
-
-    public final void saveConfig() {
-
-    }
-
-    public final void loadConfig() {
-
-    }
 }
