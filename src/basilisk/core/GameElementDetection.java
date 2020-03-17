@@ -1,4 +1,4 @@
-package basilisk;
+package basilisk.core;
 
 import java.awt.Color;
 import java.awt.Point;

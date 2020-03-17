@@ -1,3 +1,3 @@
 Manifest-version: 1.0
-Main-Class: basilisk.Main
+Main-Class: basilisk.core.Main
 Class-Path: processing/core.jar processing/apple.jar

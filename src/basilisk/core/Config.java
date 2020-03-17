@@ -1,4 +1,4 @@
-package basilisk;
+package basilisk.core;
 
 // Config variables shared throughout the entire application
 public class Config {

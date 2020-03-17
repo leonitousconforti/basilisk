@@ -1,4 +1,4 @@
-package basilisk;
+package basilisk.core;
 
 // The main entry method for java programs
 @SuppressWarnings("unused")

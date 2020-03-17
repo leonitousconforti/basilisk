@@ -1,4 +1,4 @@
-package basilisk;
+package basilisk.core;
 
 import java.net.URI;
 import java.awt.Point;
