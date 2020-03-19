@@ -22,4 +22,6 @@ public class Config {
 
     public static boolean showAiDebugs = false;
     public static boolean showAnimationDebugs = false;
+
+    public static final int port = 61888;
 }

@@ -1,5 +1,18 @@
 package basilisk.algorithms;
 
-public class HamiltonianPath implements Runnable
+import basilisk.core.ActionsManager;
 
+public class HamiltonianPath extends AlgorithmBase {
+
+    public HamiltonianPath(ActionsManager actionsManager) {
+        super("Hamiltonian Path", actionsManager);
+    }
+
+    public void init() {
+
+    }
+
+    public void calcPath() {
+        
+    }
 }

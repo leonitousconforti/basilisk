@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="src/processing/core.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/processing/apple.jar"/>
+	<classpathentry exported="true" kind="lib" path="src/websockets/Java-WebSocket-1.4.1-with-dependencies.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

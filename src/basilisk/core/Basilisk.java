@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import processing.core.PApplet;
 import basilisk.algorithms.shared.*;
+import basilisk.algorithms.AlgorithmBase;
 
 /**
  * Basilisk is an artificial intelligence program designed to play the google snake game perfectly.
@@ -28,7 +29,7 @@ public class Basilisk {
 	// The current frames being worked on
 	private BufferedImage gameImg, elementsImage;
 	// The current AI algorithm running
-	private Algorithm algorithm;
+	private Algorithms algorithms;
 	// The fps rate
 	private double fps;
 
@@ -38,11 +39,11 @@ public class Basilisk {
 		gameElementDetection = new GameElementDetection();
 		screenCapture = new ScreenCapture();
 		gui = new Gui(this);
-		algorithm = new Algorithm( null );
+		algorithms = new Algorithms( null );
 		init();
 
 		// Start the AI in a new thread
-		new Thread( run() ).start();
+		new Thread( null, run(), "image-processing" ).start();
 
 		// Initialize the other half of the basilisk program with a Processing window
         // to display the graphical UI for the user.
@@ -136,15 +137,16 @@ public class Basilisk {
 					gui.update();
 					
 					// Run the path finding algorithm
-					algorithm.run();
+					AlgorithmBase algo = algorithms.getRunningAlgorithm();
+					algorithms.run(algo);
 
 					// Get the next action from the algorithm and check it
-					Action act = algorithm.getActionManager().getNextAction();
-					boolean ready = algorithm.getActionManager().checkAction(act, gameElementDetection.getSnakeHead());
+					Action act = algorithms.getActionManager().getNextAction();
+					boolean ready = algorithms.getActionManager().checkAction(act, gameElementDetection.getSnakeHead());
 
 					// If the snake is in the right position, GO!
 					if (ready) {
-						algorithm.getActionManager().go(act);
+						algorithms.getActionManager().go(act);
 					}
 
 					// Calculate the loop timings
@@ -203,6 +205,22 @@ public class Basilisk {
 	 */
 	public BufferedImage[] getProcessedGameImages() {
 		return new BufferedImage[] { gameImg, elementsImage };
+	}
+
+	/**
+	 * Get the current Algorithms manager for the AI
+	 * @return algorithms
+	 */
+	public final Algorithms getAI_Algorithms() {
+		return this.algorithms;
+	}
+
+	/**
+	 * Get the actions manager
+	 * @return actionManager
+	 */
+	public final ActionsManager getActionsManager() {
+		return this.algorithms.getActionManager();
 	}
 
 	/**
