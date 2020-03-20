@@ -8,7 +8,7 @@
         "kind": "build",
         "isDefault": true
       },
-      "command": "rm ${workspaceRoot}/bin/Basilisk.jar & jar cvfm ${workspaceRoot}/bin/Basilisk.jar ${workspaceRoot}/bin/manifest.mf -C ${workspaceRoot}/bin/ .",
+      "command": "${workspaceRoot}/bin/compiler-out/build.sh",
       "presentation": {
         "echo": true,
         "reveal": "always",
