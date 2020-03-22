@@ -8,6 +8,25 @@ echo "compiling new .jar version..."
 jar cvfm $workspaceRoot/bin/compiler-out/Basilisk.jar $workspaceRoot/bin/compiler-out/manifest.mf -C $workspaceRoot/bin/compiler-out/basilisk .
 echo "done compiling new .jar"
 
+echo "formating build apps"
+rm -rf ${workspaceRoot}/bin/application.linux-arm64/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.linux-armv6hf/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.linux32/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.linux64/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.windows32/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.windows64/lib/websockets/
+rm -rf ${workspaceRoot}/bin/application.macosx/basilisk.app/Contents/Java/websockets/
+
+rm -rf ${workspaceRoot}/bin/application.linux-arm64/data/
+rm -rf ${workspaceRoot}/bin/application.linux-armv6hf/data/
+rm -rf ${workspaceRoot}/bin/application.linux32/data/
+rm -rf ${workspaceRoot}/bin/application.linux64/data/
+rm -rf ${workspaceRoot}/bin/application.windows32/data/
+rm -rf ${workspaceRoot}/bin/application.windows64/data/
+rm -rf ${workspaceRoot}/bin/application.macosx/basilisk.app/Contents/Java/data/
+echo "done formating build apps, ready to copy new files"
+
+
 cp ${workspaceRoot}/bin/compiler-out/Basilisk.jar ${workspaceRoot}/bin/application.linux-arm64/lib/Basilisk.jar
 cp ${workspaceRoot}/bin/compiler-out/Basilisk.jar ${workspaceRoot}/bin/application.linux-armv6hf/lib/Basilisk.jar
 echo "added new .jar to linux-arm builds"
