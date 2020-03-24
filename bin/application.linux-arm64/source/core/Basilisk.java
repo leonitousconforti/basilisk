@@ -43,19 +43,19 @@ public class Basilisk {
 		init();
 
 		// Start the AI in a new thread
-		new Thread( null, run(), "image-processing" ).start();
+		new Thread( null, run(), "Basilisk" ).start();
 
 		// Initialize the other half of the basilisk program with a Processing window
-        // to display the graphical UI for the user.
+        // to display the gui for the user.
         String[] processingArgs = { "Basilisk" };
 		PApplet.runSketch(processingArgs, gui);
 		
 		// Enable debug logs
-		Config.showAiDebugs = false;
-		Config.showAnimationDebugs = false;
+		Config.BasiliskProgram.showAiDebugs = false;
+		Config.BasiliskProgram.showAnimationDebugs = false;
 
-		Config.loading = false;
-		Config.showGameDetection = true;
+		Config.GuiConfigs.loading = false;
+		Config.GuiConfigs.showGameDetection = true;
 	}
 
 	// Initialize method
@@ -69,10 +69,10 @@ public class Basilisk {
 		int[] currentScreenMode = {screenWidth, screenHeight};
 		if ( Arrays.equals(screenModes[0], currentScreenMode) ) {
 			System.out.println("you are running 1920x1080p");
-			Config.screenConfig = Config.SCREEN_1920x1080;
+			Config.BasiliskProgram.screenConfig = Config.BasiliskProgram.SCREEN_1920x1080;
 		} else if ( Arrays.equals(screenModes[1], currentScreenMode) ) {
 			System.out.println("you are running 1440x900p");
-			Config.screenConfig = Config.SCREEN_1440x900;
+			Config.BasiliskProgram.screenConfig = Config.BasiliskProgram.SCREEN_1440x900;
 
 			// Default config when your screen is 1440x900. Does not take into account things like bookmark bar and such
 			// screenCapture.setPositionFromCords( loadingScreen.setupGame() );
@@ -87,7 +87,7 @@ public class Basilisk {
 			TimeUnit.SECONDS.sleep(1);
 		} catch(InterruptedException e) {}
 
-		// Set the apple color based on what game mode you are playing
+		// Attempt to set the apple color based on what game mode you are playing
 		gameImg = screenCapture.getFrame();
 		gameElementDetection.setAppleColor(gameImg, new Point(12, 7));
 	}
@@ -108,7 +108,7 @@ public class Basilisk {
 					
 					// while ((Config.paused) || (Config.loading));
 					// Potentially change to this for better performance?
-					while ((Config.paused) || (Config.loading)) {
+					while ((Config.BasiliskProgram.paused) || (Config.GuiConfigs.loading)) {
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
@@ -149,6 +149,16 @@ public class Basilisk {
 					Action act = algorithms.getActionManager().getNextAction();
 					boolean ready = algorithms.getActionManager().checkAction(act, gameElementDetection.getSnakeHead());
 
+					// Try to find an action for where the snake is now
+					if (!ready) {
+						Action actForPosition = algorithms.getActionManager().findActionForPosition( gameElementDetection.getSnakeHead() );
+
+						if (actForPosition != null) {
+							algorithms.getActionManager().go(actForPosition);
+							System.out.println("dispatched action for position, snake was out of line");
+						}
+					}
+
 					// If the snake is in the right position, GO!
 					if (ready) {
 						algorithms.getActionManager().go(act);
@@ -163,7 +173,7 @@ public class Basilisk {
 					ms = (double) Math.round(ms * 100) / 100;
 
 					// Print Debug logs
-					if (Config.showAiDebugs) {
+					if (Config.BasiliskProgram.showAiDebugs) {
 						System.out.println("AI loop took: " + ms + " ms, processing at: " + fps + " frames per second");
 					}
 				} // End loop
@@ -172,7 +182,9 @@ public class Basilisk {
 		}; // End runnable type
 	} // End basilisk run method
 
-	// Open the play google snake page
+	/**
+	 * Open the play google snake page
+	 */
 	public static final void openSnakeInGoogleWindow() {
 		try {
             // String[] s = new String[] {"Google Chrome", "https://www.google.com/search?q=play%20snake"};
@@ -226,6 +238,14 @@ public class Basilisk {
 	 */
 	public final ActionsManager getActionsManager() {
 		return this.algorithms.getActionManager();
+	}
+
+	/**
+	 * Get the gui element
+	 * @return gui
+	 */
+	public final Gui getGui() {
+		return this.gui;
 	}
 
 	/**

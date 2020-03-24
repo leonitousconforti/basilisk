@@ -2,6 +2,7 @@ package basilisk.core;
 
 import java.awt.Point;
 import java.awt.Robot;
+import java.util.List;
 import java.util.ArrayList;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
@@ -12,6 +13,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.java_websocket.handshake.ClientHandshake;
 
 import basilisk.algorithms.shared.*;
+import basilisk.userPrivilegeTests.*;
 
 // Defines a movement action to be simulated by the keyboard
 public class ActionsManager {
@@ -29,6 +31,9 @@ public class ActionsManager {
     // A list of the current actions dictated by the selected algorithm
     private ArrayList<Action> actions;
 
+    /**
+     * All the ways one can inject the keystrokes to allow the AI to play snake!
+     */
     public ActionsManager() {
         // Initialize the java Robot to inject key presses
         try {
@@ -39,7 +44,7 @@ public class ActionsManager {
         }
 
         // Initialize the websocket server
-        WsServer = new WebSocketServer( new InetSocketAddress( Config.port ) ) {
+        WsServer = new WebSocketServer( new InetSocketAddress( Config.ActionsManagerConfigs.websocketConnectionPort ) ) {
             @Override
             public void onStart() { 
                 System.out.println("websocket server started");
@@ -65,6 +70,10 @@ public class ActionsManager {
         useKeyer = false;
         useWebsocket = true;
         actions = new ArrayList<Action>();
+
+        // Test if either methods are invalid (ie. because of user account privileges)
+        // testForWebsocketInput();
+        // testForKeyerInput();
     }
 
     /**
@@ -110,6 +119,31 @@ public class ActionsManager {
 
         // Otherwise, the AI needs to wait until the snake is at the execution point
         return false;
+    }
+
+    /**
+     * Attempt to get an action that can be performed where the snake is right now
+     * @param snakeHead the position of the snake's head
+     */
+    public Action findActionForPosition(Point snakeHead) {
+        Action a = null;
+
+        for (Action available : actions) {
+            if ((available.executePoint.x == snakeHead.x) && (available.executePoint.y == snakeHead.y)) {
+                a = available;
+                break;
+            }
+        }
+
+        if (a != null) {
+            int index = actions.indexOf(a);
+
+            for (int i = index - 1; i >= 0; i--) {
+                actions.remove(i);
+            }
+        }
+
+        return a;
     }
 
     /**
@@ -172,6 +206,31 @@ public class ActionsManager {
     public void wipe() {
         this.actions.clear();
     }
+
+    /**
+     * Tests the functionality of the websocket implementation against user privileges
+     */
+    private final void testForWebsocketInput() {
+        userPrivilegeTests_websockets websocketsKeyTests = new userPrivilegeTests_websockets(WsServer);
+        websocketsKeyTests.canInjectKeyPresses();
+    }
+
+    /**
+     * Tests the functionality of the java keyer against user privileges
+     * testingJavaKeyer Has to be in its own class to take advantages of java.awt.event.KeyAdapter
+     */
+    private final void testForKeyerInput() {
+        userPrivilegeTests_javaKeyer javaKeyerTests = new userPrivilegeTests_javaKeyer(keyer);
+        javaKeyerTests.canInjectKeyPresses();
+    }
+
+    /**
+     * Get a list of the current actions
+     */
+    @SuppressWarnings("unchecked")
+    public List<Action> getActions() {
+        return (ArrayList<Action>) this.actions.clone();
+    }
 }
 
 
@@ -182,22 +241,28 @@ public class ActionsManager {
 //     if (event.data == "up")
 //     { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 38, 'which': 38 });
-//         document.dispatchEvent(e);
+//         setTimeout( function() {
+//             document.dispatchEvent(e);
+//         }, 30 );
 //     } else if (event.data == "down")
 //     {
 //         var e = new KeyboardEvent('keydown', {'keyCode': 40, 'which': 40 });
-//         document.dispatchEvent(e);
-//     } else if (event.data == "right")
+//         setTimeout( function() {
+//             document.dispatchEvent(e);
+//         }, 30 );    } else if (event.data == "right")
 //     { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 39, 'which': 39 });
-//         document.dispatchEvent(e);
-//     } else if (event.data == "left")
+//         setTimeout( function() {
+//             document.dispatchEvent(e);
+//         }, 30 );    } else if (event.data == "left")
 //     { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 37, 'which': 37 });
-//         document.dispatchEvent(e);
-//     } else if (event.data == "space")
+//         setTimeout( function() {
+//             document.dispatchEvent(e);
+//         }, 30 );    } else if (event.data == "space")
 //     {
 //         var e = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32 });
-//         document.dispatchEvent(e);
-//     }
+//         setTimeout( function() {
+//             document.dispatchEvent(e);
+//         }, 30 );    }
 // });

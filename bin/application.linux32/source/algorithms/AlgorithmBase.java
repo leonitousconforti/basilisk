@@ -2,10 +2,11 @@ package basilisk.algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 import basilisk.core.Config;
+import basilisk.algorithms.shared.*;
 import basilisk.core.ActionsManager;
-import basilisk.algorithms.shared.Action;
 
 public abstract class AlgorithmBase implements Runnable {
     // Actions manager to inject keystrokes
@@ -40,7 +41,7 @@ public abstract class AlgorithmBase implements Runnable {
     public void run() {
         while (true) {
             // Wait until this is the selected algorithm
-            while (!selected || Config.paused) {
+            while (!selected || Config.BasiliskProgram.paused) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -159,4 +160,34 @@ public abstract class AlgorithmBase implements Runnable {
      * Override this method!
      */
     public abstract void calcPath();
+
+    /**
+     * Get the set of node that are node being looked at by the algorithm
+     * @return a list of nodes
+     */
+    public List<GameTile> getClosedSet() {
+        return null;
+    }
+    
+    /**
+     * Get the set of nodes that are still being considered by the algorithm
+     * @return a list of nodes
+     */
+    public List<GameTile> getOpenSet() {
+        return null;
+    }
+
+    /**
+     * Get the GameTile grid being used by the algorithm if there is one
+     */
+    public GameTile[][] getGrid() {
+        return null;
+    }
+
+    /**
+     * Get the current calculated path
+     */
+    public List<GameTile> getPath() {
+        return null;
+    }
 }

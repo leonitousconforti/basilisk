@@ -11,21 +11,12 @@ import java.awt.image.BufferedImage;
 // import java.awt.image.Raster;
 
 public class GameElementDetection {
-	// TODO: move variable initializations to class constructor
-	// Fixed 3/16/20
-
 	// The color used to identify snake parts
 	private Color rgbSnakeColor;
-
-	// private float snakeColorHue = Color.RGBtoHSB((rgbSnakeColor >> 16) & 0xff, (rgbSnakeColor >> 8) & 0xff, rgbSnakeColor & 0xff, null);
 	private float snakeColorHue;
 	
 	// The color used to identify the apples
 	private Color rgbAppleColor;
-	
-	// The previous apple position is used to tell weather or not a new a-star path needs to be calculated.
-	// Only when the apple has changed positions (ie. eaten) or the snake is not on track then a new a-star path needs to be calculated.
-	private Point previousApplePos;
 	
 	// The snake parts from the most recently processed frame are save to differentiate where the head is.
 	// the basic detection relies on colors and since it only detect colors, it is impossible to identify what part
@@ -42,22 +33,28 @@ public class GameElementDetection {
 	private final Rectangle gameDataRasterRectangle;
 
 	// Rectangle where to capture the apple color
-	private final Point appleColorRasterRectangle;
+	private final Point appleColorRaster;
 	
 	// A raster buffer to write data to when performing the shrink process
 	private BufferedImage gameRasterImage;
 
+	/**
+	 * Take a screen shot of the game in any state and detect the positions of the snake and apple reliably
+	 */
 	public GameElementDetection() {
 		rgbSnakeColor = new Color(65, 100, 240);
+		// private float snakeColorHue = Color.RGBtoHSB((rgbSnakeColor >> 16) & 0xff, (rgbSnakeColor >> 8) & 0xff, rgbSnakeColor & 0xff, null);
 		snakeColorHue = Color.RGBtoHSB(rgbSnakeColor.getRed(), rgbSnakeColor.getGreen(), rgbSnakeColor.getBlue(), null)[0] * 255;
 		rgbAppleColor = new Color(223, 48, 24);
-		previousApplePos = new Point(-1, -1);
+
 		snakeParts = new ArrayList<Point>();
 		lastSnakeParts = new ArrayList<Point>();
+
 		applePos = new Point(-1, -1);
 		snakeHead = new Point(-1, -1);
+
 		gameDataRasterRectangle = new Rectangle(28, 95, 544, 480);
-		appleColorRasterRectangle = new Point(12, 7);
+		appleColorRaster = new Point(12, 7);
 		gameRasterImage = new BufferedImage(17, 15, BufferedImage.TYPE_INT_RGB);
 	}
 
@@ -72,8 +69,8 @@ public class GameElementDetection {
 		// If no point was provided, use the default point @ (12, 7)
 		if (point == null) {
 			// Convert from quadrant space to pixel space for the input image
-			x = appleColorRasterRectangle.x * 32 + 16 + gameDataRasterRectangle.x;
-			y = appleColorRasterRectangle.y * 32 + 16 + gameDataRasterRectangle.y;
+			x = appleColorRaster.x * 32 + 16 + gameDataRasterRectangle.x;
+			y = appleColorRaster.y * 32 + 16 + gameDataRasterRectangle.y;
 		} else {
 			// If the user provided pixel points not coordinate points
 			if ((point.x > 17) || (point.y > 15) || (point.x < 0) || (point.y < 0)) {
@@ -140,8 +137,6 @@ public class GameElementDetection {
 		lastSnakeParts = (ArrayList<Point>) snakeParts.clone();
 		// Collections.copy(lastSnakeParts, snakeParts);
 		snakeParts.clear();
-		// set the previous apple position.
-		previousApplePos = applePos.getLocation();
 
 		// Supposedly looping over image columns and then rows is faster; have not tested though
 		// @see https://stackoverflow.com/questions/7749895/java-loop-through-pixels-in-an-image
@@ -190,7 +185,6 @@ public class GameElementDetection {
 	 * @return {BufferedImage} resizedImage
 	 * 
 	 * @see https://stackoverflow.com/questions/9417356/bufferedimage-resize
-	 * TODO: find a better way to reuse the Graphics2D g2d object
 	 */
 	public static BufferedImage resizeImg(BufferedImage imgToResize, int newWidth, int newHeight) {
 		Image tmp = imgToResize.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
@@ -217,14 +211,6 @@ public class GameElementDetection {
 	 */
 	public Point getApplePos() {
 		return applePos;
-	}
-
-	/**
-	 * Gets the previous apple position
-	 * @return {Point} previousApplePos
-	 */
-	public Point getPreviousApplePos() {
-		return previousApplePos;
 	}
 
 	/**

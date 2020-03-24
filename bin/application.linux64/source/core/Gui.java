@@ -2,11 +2,14 @@ package basilisk.core;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.List;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 
 import processing.core.*;
+import basilisk.algorithms.shared.*;
+import basilisk.algorithms.AlgorithmBase;
 
 // Gui for the basilisk program
 public class Gui extends PApplet {
@@ -64,10 +67,12 @@ public class Gui extends PApplet {
 	@Override
     public void settings() {
 		// Create the window based on the screen size
-		if (Config.screenConfig == Config.SCREEN_1920x1080) {
-			size(600, 600);
-		} else if (Config.screenConfig == Config.SCREEN_1440x900) {
-			size(300, 300);
+		if (Config.BasiliskProgram.screenConfig == Config.BasiliskProgram.SCREEN_1920x1080) {
+            size(600, 600);
+            Config.GuiConfigs.scale = 1;
+		} else if (Config.BasiliskProgram.screenConfig == Config.BasiliskProgram.SCREEN_1440x900) {
+            size(300, 300);
+            Config.GuiConfigs.scale = 1/2;
         }
 	}
 
@@ -76,12 +81,12 @@ public class Gui extends PApplet {
     public void setup() {
 		// Setup the processing surface
         background(51);
-		frameRate(Config.GuiFrameRate);
+		frameRate(Config.GuiConfigs.GuiFrameRate);
 		surface.setAlwaysOnTop(true);
         surface.setLocation(100, (Toolkit.getDefaultToolkit().getScreenSize().height) / 2 - height / 2);
         surface.setTitle("Basilisk AI");
-        PImage icon = loadImage("logo.png");
-        surface.setIcon( icon );
+        // PImage icon = loadImage("logo.png");
+        // surface.setIcon( icon );
     }
 
 	// Processing loop method
@@ -91,17 +96,13 @@ public class Gui extends PApplet {
         double startTime = System.nanoTime();
 
 		// Scale the elements in the PApplet according to the screen size
-		if (Config.screenConfig == Config.SCREEN_1920x1080) {
-			scale( (float) 1 );
-		} else if (Config.screenConfig == Config.SCREEN_1440x900) {
-			scale( (float) 1/2 );
-		}
+        scale( (float) 1/2 );
 
         // Run the appropriate method desired through key presses
-        if (Config.loading) {
+        if (Config.GuiConfigs.loading) {
             loading();
         }
-        if (Config.showGameDetection) {
+        if (Config.GuiConfigs.showGameDetection) {
             showGameDetection();
         }
 
@@ -114,7 +115,7 @@ public class Gui extends PApplet {
         ms = (double) Math.round(ms * 100) / 100;
 
         // Print Debug logs
-        if (Config.showAnimationDebugs) {
+        if (Config.BasiliskProgram.showAnimationDebugs) {
             System.out.println("Animation loop took: " + ms + " ms, processing at: " + fps + " frames per second");
         }
     }
@@ -129,18 +130,18 @@ public class Gui extends PApplet {
         }
         // Pause on p
         if (key == 'p') {
-            Config.paused = !Config.paused;
+            Config.BasiliskProgram.paused = !Config.BasiliskProgram.paused;
 
-            if (!Config.paused) {
+            if (!Config.BasiliskProgram.paused) {
                 loop();
-            } else if (Config.paused) {
+            } else if (Config.BasiliskProgram.paused) {
                 noLoop();
             }
         }
         // Reloading setup process
         if (key == 'r') {
-            Config.showGameDetection = false;
-            Config.loading = true;
+            Config.GuiConfigs.showGameDetection = false;
+            Config.GuiConfigs.loading = true;
 
             // Initialize some flags for later
             loadingFlag1 = false;
@@ -150,36 +151,37 @@ public class Gui extends PApplet {
         }
         // Toggle debug messages to console
         if (key == 'd') {
-            Config.showAiDebugs = !Config.showAiDebugs;
-            Config.showAnimationDebugs = !Config.showAnimationDebugs;
-            System.out.println("Printing debug messages: " + Config.showAiDebugs);
+            Config.BasiliskProgram.showAiDebugs = !Config.BasiliskProgram.showAiDebugs;
+            Config.BasiliskProgram.showAnimationDebugs = !Config.BasiliskProgram.showAnimationDebugs;
+            System.out.println("Printing debug messages: " + Config.BasiliskProgram.showAiDebugs);
         }
     }
 
     // Processing mouse input method
     @Override
     public void mousePressed() {
-        if (Config.loadingStep == Config.loadingStepDone) {
+        if (Config.GuiConfigs.loadingStep == Config.GuiConfigs.loadingStepDone) {
             System.out.println("You do not need to click for this!");
             return;
         }
 
-        if (Config.loadingStep == Config.loadingStepApple) {
+        // To detect the color of the apple
+        if (Config.GuiConfigs.loadingStep == Config.GuiConfigs.loadingStepApple) {
             AI.getGameElementDetection().setAppleColor( gameImg, new Point( mouseX * 2, mouseY * 2 ) );
             loadingFlag1 = true;
 
             System.out.println("Done setting apple color when reloading setup");
         }
 
-
-        else if (Config.loadingStep == Config.loadingStepSnake) {
+        // To detect the color of the snake
+        else if (Config.GuiConfigs.loadingStep == Config.GuiConfigs.loadingStepSnake) {
             AI.getGameElementDetection().setSnakeColor( new Color( gameImg.getRGB(mouseX * 2, mouseY * 2) ) );
             loadingFlag2 = true;
             System.out.println("Done setting snake color when reloading setup");
 
-            Config.loadingStep = Config.loadingStepDone;
-            Config.loading = false;
-            Config.showGameDetection = true;
+            Config.GuiConfigs.loadingStep = Config.GuiConfigs.loadingStepDone;
+            Config.GuiConfigs.loading = false;
+            Config.GuiConfigs.showGameDetection = true;
         }
     }
 
@@ -214,6 +216,60 @@ public class Gui extends PApplet {
 		fill(0);
 		noStroke();
         rect(28 + snakeHead.x * 32, 95 + snakeHead.y * 32, 32, 32);
+
+        // Draw the snake AI path finding
+        AlgorithmBase algo = AI.getAI_Algorithms().getRunningAlgorithm();
+
+        if (algo.getName() == "A* search") {
+            // Draw nodes
+            for (int x = 0; x < 17; x++) {
+                for (int y = 0; y < 15; y++) {
+                    GameTile g = algo.getGrid()[x][y];
+
+                    if (g.wall) {
+                        fill(0);
+                        ellipse(g.x * 32 + 28 + 16, g.y * 32 + 95 + 16, 7, 7);
+                    } else {
+                        fill(255);
+                        ellipse(g.x * 32 + 28 + 16, g.y * 32 + 95 + 16, 7, 7);
+                    }
+                }
+            }
+
+            // Draw the open set
+            for (GameTile g : algo.getOpenSet()) {
+                fill(50, 205, 50);
+                ellipse(g.x * 32 + 28 + 16, g.y * 32 + 95 + 16, 10, 10);
+            }
+
+            // Draw the closed set
+            for (GameTile g : algo.getClosedSet()) {
+                fill(210, 33, 45);
+                ellipse(g.x * 32 + 28 + 16, g.y * 32 + 95 + 16, 10, 10);
+            }
+
+            // Draw the path being worked on
+            for (GameTile g : algo.getPath()) {
+                fill(200, 100, 200);
+                ellipse(g.x * 32 + 28 + 16, g.y * 32 + 95 + 16, 10, 10);
+            }
+            noFill();
+            stroke(255, 0, 200);
+            strokeWeight(6);
+            beginShape();
+            for (int i = 0; i < algo.getPath().size(); i++) {
+              vertex(algo.getPath().get(i).x * 32 + 32 / 2 + 28, algo.getPath().get(i).y * 32 + 32 / 2 + 95);
+            }
+            endShape();
+        }
+
+        // Draw anywhere there are actions to take place
+        fill(50, 140, 180);
+
+        List<Action> actions = AI.getAI_Algorithms().getActionManager().getActions();
+        for (Action a : actions) {
+            rect(a.executePoint.x * 32 + 28, a.executePoint.y * 32 + 95, 32, 32);
+        }
     }
 
     // Show the setup process in the animation window
@@ -227,7 +283,7 @@ public class Gui extends PApplet {
         // If the user has not hit the apple nor the snake yet...
         if ((!loadingFlag1) && (!loadingFlag2)) {
             // Update the config variable
-            Config.loadingStep = Config.loadingStepApple;
+            Config.GuiConfigs.loadingStep = Config.GuiConfigs.loadingStepApple;
 
             // Draw a screenshot for the user
             image( new PImage(gameImg), 0, 0 );
@@ -240,7 +296,7 @@ public class Gui extends PApplet {
         // We have the apple, now time for the snake...
         else if ((loadingFlag1) && (!loadingFlag2)) {
             // Update the config variable
-            Config.loadingStep = Config.loadingStepSnake;
+            Config.GuiConfigs.loadingStep = Config.GuiConfigs.loadingStepSnake;
 
             // Draw a screenshot for the user
             image( new PImage(gameImg), 0, 0 );

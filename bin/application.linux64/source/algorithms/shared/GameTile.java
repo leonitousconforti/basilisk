@@ -29,23 +29,30 @@ public class GameTile {
      * Adds the positions of the neighbors, only use lateral and horizontal movements and do not add diagonals
      * @param grid the grid to add neighbors from
      */
-    public void addNeighbors(GameTile[][] grid) 
-    {
-        if (x > 0) 
-        {
+    public void addNeighbors(GameTile[][] grid) {
+        if (x > 0) {
             neighbors.add(grid[x- 1][y]);
         }
-        if (y > 0) 
-        {
+        if (y > 0) {
             neighbors.add(grid[x][y - 1]);
         }
-        if (x < 17 - 1)
-        {
+        if (x < 17 - 1) {
             neighbors.add(grid[x + 1][y]);
         }
-        if (y < 15 - 1)
-        {
+        if (y < 15 - 1) {
             neighbors.add(grid[x][y + 1]);
         }
+    }
+
+    /**
+     * Resets a game tile to the state when it was created
+     */
+    public void reset() {
+        f = 0;
+        g = 0; 
+        heuristic = 0;
+
+        previous = null;
+        wall = false;
     }
 }

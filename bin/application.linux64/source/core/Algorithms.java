@@ -52,7 +52,7 @@ public class Algorithms {
 
     /**
 	 * Sets the algorithm to be used by the AI
-	 * @param _algorithm the algorithm to use in [A-star, Hamiltonian]
+	 * @param _algorithm the algorithm to use in [Random-Movement, A-star, Hamiltonian]
 	 */
 	@SuppressWarnings("all")
 	public final void setAlgorithm(String _algorithm) {

@@ -17,7 +17,7 @@ public class ScreenCapture {
 	private BufferedImage captureFrame;
 
 	/**
-	 * Creates a new Screen Capture instance recording the entire screen
+	 * Record the screen
 	 */
 	public ScreenCapture() {
 		// Attempt to initialize the java Robot
@@ -52,7 +52,6 @@ public class ScreenCapture {
 	 * @return {BufferedImage} resizedImage
 	 * 
 	 * @see https://stackoverflow.com/questions/9417356/bufferedimage-resize
-	 * TODO: find a better way to reuse the Graphics2D g2d object
 	 */
 	public static BufferedImage resizeImg(BufferedImage imgToResize, int newWidth, int newHeight) {
 		Image tmp = imgToResize.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
