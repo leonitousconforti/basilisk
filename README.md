@@ -2,6 +2,8 @@
 
 Basilisk is an artificial intelligence program designed to play the Google [Snake](https://www.google.com/search?q=play%20snake) game. Its core functionality and algorithms are written in Java, however, it also uses [Processing](https://processing.org/) under the hood to help create the GUI to display stats to the user.
 
+Basilisk works by taking a screenshot of the snake game, finding where the apple is located and snake's location, passing that information to which ever path finding algorithm is running the show, getting the next action queued from the algorithm, and performing that action with key presses. Basilisk is able to maintain executing this main loop 60/sec and the path finding Algorithm thread runs 60/sec.
+
 ## Getting Started
 
 See the '[releases](https://github.com/leonitousconforti/basilisk/releases)' tab to download a 'double clickable' program you can run on your system. There are pre-built packages for
