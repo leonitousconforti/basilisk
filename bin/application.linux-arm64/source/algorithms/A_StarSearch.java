@@ -22,6 +22,7 @@ public class A_StarSearch extends AlgorithmBase {
 
     // Previous apple pos to determine wether or not to tun A* again
     Point previousApplePos;
+    Point previousSnakePos;
 
     /**
      * Constructs a new A* search algorithm
@@ -40,6 +41,7 @@ public class A_StarSearch extends AlgorithmBase {
         start = new Point(-1, -1);
         goal = new Point(-1, 1);
         previousApplePos = new Point(-1, -1);
+        previousSnakePos = new Point(-1, -1);
 
         // Initialize grid
         for (int i  = 0; i < 17; i++) {
@@ -72,17 +74,22 @@ public class A_StarSearch extends AlgorithmBase {
     public void calcPath() {
         // Check to run again
         if ((previousApplePos.x == getApplePos().x) && (previousApplePos.y == getApplePos().y)) {
-            // Skip everything else and return from this run
-            return;
-        } else 
-        if ((getApplePos().x < 0) || (getApplePos().y < 0)) {
-            // No point in running the algorithm if we don't have a target node to reach
-            return;
+            if ((previousSnakePos.x == getSnakeHead().x) && (previousSnakePos.y == getSnakeHead().y)) {
+                // Skip everything else and return from this run
+                return;
+            } else 
+            if ((getApplePos().x < 0) || (getApplePos().y < 0)) {
+                // No point in running the algorithm if we don't have a target node to reach
+                return;
+            }
         }
 
         // Set the previous apple position when it moves
         previousApplePos.x = getApplePos().x;
         previousApplePos.y = getApplePos().y;
+
+        previousSnakePos.x = getSnakeHead().x;
+        previousSnakePos.y = getSnakeHead().y;
 
         // Clear the previous loop iteration data
         openSet.clear();
@@ -111,6 +118,8 @@ public class A_StarSearch extends AlgorithmBase {
 
         // Add the starting tile to the open set
         openSet.add( gameTileStart );
+
+        // Update the walls
         for (Point p : getSnakeParts()) {
             grid[p.x][p.y].wall = true;
         }
@@ -130,14 +139,16 @@ public class A_StarSearch extends AlgorithmBase {
             if (current == gameTileGoal) {
                 // Determine the path and add the actions
                 reconstructPath(current);
-                List<Action> actionList = makeActionList(path);
+                List<Action> nextActionList = makeActionList(path);
+                // List<Action> queuedActions = getActionsQueued();
 
                 // Add actions
-                for (Action a : actionList) {
+                clearActions();
+                for (Action a : nextActionList) {
                     addAction(a);
                 }
 
-                System.out.println("A* done! added " + actionList.size() + " actions to the que");
+                System.out.println("A* done! added " + nextActionList.size() + " actions to the que");
                 return;
             }
 

@@ -142,6 +142,21 @@ public abstract class AlgorithmBase implements Runnable {
     }
 
     /**
+     * Clear all the pending actions
+     */
+    public void clearActions() {
+        this.actionsManager.wipe();
+    }
+
+    /**
+     * Get all the actions in the que
+     * @return the actions list
+     */
+    public List<Action> getActionsQueued() {
+        return this.actionsManager.getActions();
+    }
+
+    /**
      * Set the time to wait between loop runs
      * @param millis the milliseconds to wait
      */

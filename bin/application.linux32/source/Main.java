@@ -22,6 +22,7 @@ public class Main {
 
         // The AI algorithm running the show right now
         basilisk.getAI_Algorithms().setAlgorithm("A-star");
+        // basilisk.getAI_Algorithms().setAlgorithm("Random-Movement");
         AlgorithmBase algoRunning = basilisk.getAI_Algorithms().getRunningAlgorithm();
     }
 }

@@ -147,6 +147,14 @@ public class ActionsManager {
     }
 
     /**
+     * Removes an action from the Que
+     * @param action the action to remove
+     */
+    public void removeAction(Action action) {
+        this.actions.remove(action);
+    }
+
+    /**
      * Performs an action
      * @param action the action to execute
      */

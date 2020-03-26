@@ -13,7 +13,7 @@ public class Random extends AlgorithmBase {
     private Point lastActionPoint = new Point(-1, -1);
 
     public Random(ActionsManager actionsManager) {
-        super("Random", actionsManager);
+        super("Random-Movement", actionsManager);
         initDirs();
     }
 

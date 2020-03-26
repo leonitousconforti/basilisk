@@ -29,7 +29,7 @@ public class Basilisk {
 	// The current frames being worked on
 	private BufferedImage gameImg, elementsImage;
 	// The current AI algorithm running
-	private Algorithms algorithms;
+	private final Algorithms algorithms;
 	// The fps rate
 	private double fps;
 
