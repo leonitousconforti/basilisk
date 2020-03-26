@@ -61,13 +61,18 @@ On macosx, the AI needs extra accessability permissions to use the keyboard. Whe
 4. hit enter to run
 
 ```javascript
-var socket = new WebSocket('ws://localhost:61888/');   // Attempts to open a websocket connection to localhost:61888, notice that this connection goes to localhost (A.K.A you computer) and not to an outbound website.
+var socket = new WebSocket('ws://localhost:61888/');// Attempts to open a websocket connection to localhost
+                                                    // port 61888, notice that this connection goes to
+                                                    // localhost (A.K.A you computer) and not to an outbound website
 
 socket.addEventListener('message', function (event) {  // When the socket receives any data, which the AI will be
     console.log('Message from server ', event.data);   // sending, log it to the console.
 
 
-    // Make the corresponding javascript KeyboardEvent using the information that the AI sent us and then dispatch that event to the current chrome tab (which should be the google snake page). Also there is a little delay because sometimes the AI tries to think to fast and then it goes somewhere before it meant to, but 30ms is enough to cancel that out.
+    // Make the corresponding javascript KeyboardEvent using the information that the AI sent us and then dispatch
+    // that event to the current chrome tab (which should be the google snake page). Also there is a little delay
+    // because sometimes the AI tries to think to fast and then it goes somewhere before it meant to, but 30ms is
+    // enough to cancel that out.
     if (event.data == "up") {
         var e = new KeyboardEvent('keydown', {'keyCode': 38, 'which': 38 }); // up arrow keycode
 
