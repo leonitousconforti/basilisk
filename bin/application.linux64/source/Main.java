@@ -14,7 +14,7 @@ public class Main {
         Basilisk basilisk = new Basilisk();
 
         // All the individual parts of Basilisk
-        // Gui gui = basilisk.getGui();
+        Gui gui = basilisk.getGui();
         ScreenCapture cap = basilisk.getScreenCapture();
         GameElementDetection ged = basilisk.getGameElementDetection();
         ActionsManager act = basilisk.getActionsManager();

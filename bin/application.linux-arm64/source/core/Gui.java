@@ -2,7 +2,6 @@ package basilisk.core;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.List;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
@@ -200,10 +199,6 @@ public class Gui extends PApplet {
 		strokeWeight(6);
 		fill(255);
         stroke(100, 100, 200);
-        
-		// TODO: fix concurrent modification exception
-		// see https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
-		// *Fixed 03/14/20
 		
 		// "The iterators returned by this class's iterator and listIterator methods are fail-fast: if the list is 
 		// structurally modified at any time after the iterator is created, in any way except through the iterator 

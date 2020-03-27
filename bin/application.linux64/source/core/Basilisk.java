@@ -21,7 +21,7 @@ import basilisk.algorithms.AlgorithmBase;
  */
 public class Basilisk {
 	// GUI
-	// private final Gui gui;
+	private final Gui gui;
 	// Screen capture for recording the screen
 	private final ScreenCapture screenCapture;
 	// Game element detection for finding the snake and apple
@@ -38,7 +38,7 @@ public class Basilisk {
 		// Initialize components
 		gameElementDetection = new GameElementDetection();
 		screenCapture = new ScreenCapture();
-		// gui = new Gui(this);
+		gui = new Gui(this);
 		algorithms = new Algorithms();
 		init();
 
@@ -48,7 +48,7 @@ public class Basilisk {
 		// Initialize the other half of the basilisk program with a Processing window
         // to display the gui for the user.
         String[] processingArgs = { "Basilisk" };
-		// PApplet.runSketch(processingArgs, gui);
+		PApplet.runSketch(processingArgs, gui);
 		
 		// Enable debug logs
 		Config.BasiliskProgram.showAiDebugs = true;
@@ -134,7 +134,7 @@ public class Basilisk {
 					// );
 
 					// Two methods, they both do the same thing. Offloads a little work to the animation tread
-					// gui.update();
+					gui.update();
 					
 					// Run the path finding algorithm
 					AlgorithmBase algo = algorithms.getRunningAlgorithm();
@@ -244,9 +244,9 @@ public class Basilisk {
 	 * Get the gui element
 	 * @return gui
 	 */
-	// public final Gui getGui() {
-	// 	return this.gui;
-	// }
+	public final Gui getGui() {
+		return this.gui;
+	}
 
 	/**
 	 * Get the fps rate the AI is processing at

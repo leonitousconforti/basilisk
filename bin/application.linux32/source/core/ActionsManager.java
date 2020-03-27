@@ -2,7 +2,6 @@ package basilisk.core;
 
 import java.awt.Point;
 import java.awt.Robot;
-import java.util.List;
 import java.util.ArrayList;
 import java.awt.AWTException;
 import java.awt.event.KeyEvent;
