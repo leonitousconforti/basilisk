@@ -1,11 +1,16 @@
 #!/bin/sh
 
 workspaceRoot=./
+
+echo "preparinging..."
+mkdir $workspaceRoot/bin/compiler-out/temp-classes/
+cp -r $workspaceRoot/bin/compiler-out/basilisk/ $workspaceRoot/bin/compiler-out/temp-classes/basilisk/
+
 rm $workspaceRoot/bin/compiler-out/Basilisk.jar
 echo "removing old .jar version"
 
 echo "compiling new .jar version..."
-jar cvfm $workspaceRoot/bin/compiler-out/Basilisk.jar $workspaceRoot/bin/compiler-out/manifest.mf -C $workspaceRoot/bin/compiler-out/basilisk .
+jar cvfm $workspaceRoot/bin/compiler-out/Basilisk.jar $workspaceRoot/bin/compiler-out/manifest.mf -C $workspaceRoot/bin/compiler-out/temp-classes .
 echo "done compiling new .jar"
 
 echo "formating build apps"
@@ -122,3 +127,7 @@ echo "updating resources for windows64 build"
 
 cp -r ${workspaceRoot}/resources/ ${workspaceRoot}/bin/application.macosx/basilisk.app/Contents/Java/data/
 echo "updating resources for macosx build"
+
+echo "cleaning up..."
+rm -rf $workspaceRoot/bin/compiler-out/temp-classes/basilisk/
+rmdir $workspaceRoot/bin/compiler-out/temp-classes/
