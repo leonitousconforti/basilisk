@@ -14,15 +14,16 @@ public class Main {
         Basilisk basilisk = new Basilisk();
 
         // All the individual parts of Basilisk
-        Gui gui = basilisk.getGui();
+        // Gui gui = basilisk.getGui();
         ScreenCapture cap = basilisk.getScreenCapture();
         GameElementDetection ged = basilisk.getGameElementDetection();
         ActionsManager act = basilisk.getActionsManager();
         Algorithms algo = basilisk.getAI_Algorithms();
-
+        
         // The AI algorithm running the show right now
-        basilisk.getAI_Algorithms().setAlgorithm("A-star");
+        // basilisk.getAI_Algorithms().setAlgorithm("A-star");
         // basilisk.getAI_Algorithms().setAlgorithm("Random-Movement");
+        basilisk.getAI_Algorithms().setAlgorithm("Hamiltonian");
         AlgorithmBase algoRunning = basilisk.getAI_Algorithms().getRunningAlgorithm();
     }
 }

@@ -17,6 +17,8 @@ public abstract class AlgorithmBase implements Runnable {
     private volatile boolean selected;
     // The delay to wait between loop runs
     private int delay = 0;
+    // Can search the actions queued to get back on track?
+    private boolean supportsPathSkipping;
 
     // Cached references for everything that the algorithm can use
     private Point snakeHead;
@@ -34,6 +36,7 @@ public abstract class AlgorithmBase implements Runnable {
 
         name = _name;
         selected = false;
+        supportsPathSkipping = false;
     }
 
     // The run method from Runnable, runs in its own thread
@@ -152,8 +155,9 @@ public abstract class AlgorithmBase implements Runnable {
      * Get all the actions in the que
      * @return the actions list
      */
-    public List<Action> getActionsQueued() {
-        return this.actionsManager.getActions();
+    @SuppressWarnings("unchecked")
+    public ArrayList<Action> getActionsQueued() {
+        return (ArrayList<Action>) this.actionsManager.getActions().clone();
     }
 
     /**
@@ -204,5 +208,23 @@ public abstract class AlgorithmBase implements Runnable {
      */
     public List<GameTile> getPath() {
         return null;
+    }
+
+    /**
+     * Allows basilisk to check all queued actions to see if it can get back on track when it misfires
+     */
+    public void enableSupportsPathSkipping() {
+        this.supportsPathSkipping = true;
+    }
+
+    /**
+     * Disallows basilisk to check all queued actions to see if it can get back on track when it misfires
+     */
+    public void disableSupportsPathSkipping() {
+        this.supportsPathSkipping = false;
+    }
+
+    public boolean supportsPathSkipping() {
+        return this.supportsPathSkipping;
     }
 }

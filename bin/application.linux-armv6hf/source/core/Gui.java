@@ -264,12 +264,11 @@ public class Gui extends PApplet {
         }
 
         // Draw anywhere there are actions to take place
-        fill(50, 140, 180);
-
-        List<Action> actions = AI.getAI_Algorithms().getActionManager().getActions();
-        for (Action a : actions) {
-            rect(a.executePoint.x * 32 + 28, a.executePoint.y * 32 + 95, 32, 32);
-        }
+        // fill(50, 140, 180);
+        // List<Action> actions = AI.getAI_Algorithms().getActionManager().getActions();
+        // for (Action a : actions) {
+        //     rect(a.executePoint.x * 32 + 28 + 6, a.executePoint.y * 32 + 95 + 6, 20, 20);
+        // }
     }
 
     // Show the setup process in the animation window

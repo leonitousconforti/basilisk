@@ -30,11 +30,14 @@ public class ActionsManager {
 
     // A list of the current actions dictated by the selected algorithm
     private ArrayList<Action> actions;
+    private Point prevSnakePos;
 
     /**
      * All the ways one can inject the keystrokes to allow the AI to play snake!
      */
     public ActionsManager() {
+        prevSnakePos = new Point(-1, -1);
+
         // Initialize the java Robot to inject key presses
         try {
             keyer = new Robot();
@@ -125,10 +128,14 @@ public class ActionsManager {
      * Attempt to get an action that can be performed where the snake is right now
      * @param snakeHead the position of the snake's head
      */
+    @SuppressWarnings("unchecked")
     public Action findActionForPosition(Point snakeHead) {
-        Action a = null;
+        if ( (snakeHead.x == prevSnakePos.x) && (snakeHead.y == prevSnakePos.y) ) {
+            return null;
+        }
 
-        for (Action available : actions) {
+        Action a = null;
+        for (Action available : (ArrayList<Action>) actions.clone()) {
             if ((available.executePoint.x == snakeHead.x) && (available.executePoint.y == snakeHead.y)) {
                 a = available;
                 break;
@@ -142,6 +149,9 @@ public class ActionsManager {
                 actions.remove(i);
             }
         }
+
+        prevSnakePos.x = snakeHead.x;
+        prevSnakePos.y = snakeHead.y;
 
         return a;
     }
@@ -236,7 +246,7 @@ public class ActionsManager {
      * Get a list of the current actions
      */
     @SuppressWarnings("unchecked")
-    public List<Action> getActions() {
+    public ArrayList<Action> getActions() {
         return (ArrayList<Action>) this.actions.clone();
     }
 }
@@ -246,31 +256,18 @@ public class ActionsManager {
 // var socket = new WebSocket('ws://localhost:61888/');
 // socket.addEventListener('message', function (event) {
 //     console.log('Message from server ', event.data);
-//     if (event.data == "up")
-//     { 
+
+//     if (event.data == "up") { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 38, 'which': 38 });
-//         setTimeout( function() {
-//             document.dispatchEvent(e);
-//         }, 30 );
-//     } else if (event.data == "down")
-//     {
+//         document.dispatchEvent(e);
+//     } else if (event.data == "down") {
 //         var e = new KeyboardEvent('keydown', {'keyCode': 40, 'which': 40 });
-//         setTimeout( function() {
-//             document.dispatchEvent(e);
-//         }, 30 );    } else if (event.data == "right")
-//     { 
+//         document.dispatchEvent(e);
+//     } else if (event.data == "right") { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 39, 'which': 39 });
-//         setTimeout( function() {
-//             document.dispatchEvent(e);
-//         }, 30 );    } else if (event.data == "left")
-//     { 
+//         document.dispatchEvent(e);
+//     } else if (event.data == "left") { 
 //         var e = new KeyboardEvent('keydown', {'keyCode': 37, 'which': 37 });
-//         setTimeout( function() {
-//             document.dispatchEvent(e);
-//         }, 30 );    } else if (event.data == "space")
-//     {
-//         var e = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32 });
-//         setTimeout( function() {
-//             document.dispatchEvent(e);
-//         }, 30 );    }
+//         document.dispatchEvent(e);
+//     }
 // });

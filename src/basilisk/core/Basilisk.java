@@ -51,7 +51,7 @@ public class Basilisk {
 		PApplet.runSketch(processingArgs, gui);
 		
 		// Enable debug logs
-		Config.BasiliskProgram.showAiDebugs = false;
+		Config.BasiliskProgram.showAiDebugs = true;
 		Config.BasiliskProgram.showAnimationDebugs = false;
 
 		Config.GuiConfigs.loading = false;
@@ -150,7 +150,7 @@ public class Basilisk {
 					boolean ready = algorithms.getActionManager().checkAction(act, gameElementDetection.getSnakeHead());
 
 					// Try to find an action for where the snake is now
-					if (!ready) {
+					if ((!ready) && (algo.supportsPathSkipping())) {
 						Action actForPosition = algorithms.getActionManager().findActionForPosition( gameElementDetection.getSnakeHead() );
 
 						if (actForPosition != null) {

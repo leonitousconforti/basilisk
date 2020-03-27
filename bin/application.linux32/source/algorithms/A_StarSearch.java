@@ -63,6 +63,7 @@ public class A_StarSearch extends AlgorithmBase {
         System.out.println("A* taking over!");
 
         setDelayBetweenLoops(0);
+        enableSupportsPathSkipping();
         openSet.clear();
         closedSet.clear();
         path.clear();

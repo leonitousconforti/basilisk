@@ -20,6 +20,7 @@ public class Random extends AlgorithmBase {
     @Override
     public void init() {
         setDelayBetweenLoops( 0 );
+        disableSupportsPathSkipping();
         System.out.println("Random algorithm initialized");
     }
 
