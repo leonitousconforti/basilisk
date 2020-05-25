@@ -1,0 +1,37 @@
+Only run when the program is not paused!
+TODO: Research better ways to stall thread until boolean changes?
+see: https://stackoverflow.com/questions/44660137/how-check-boolean-value-until-it-is-true?noredirect=1&lq=1
+see: https://stackoverflow.com/questions/19025366/wait-until-boolean-value-changes-it-state
+
+while ((Config.paused) || (Config.loading));
+Potentially change to this for better performance?
+
+
+old code
+--------
+
+    /**
+     * Checks what screen size you have and set what size to show gui components.
+     */
+    public Dimension checkScreenConfiguration() {
+        // Use to get your screen configuration, Basilisk only runs on 1920x1080 or
+        // 1440x900
+        final int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+        final int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+        int[] currentScreenMode = { screenWidth, screenHeight };
+        final int[][] screenModes = { { 1920, 1080 }, { 1440, 900 } };
+
+        // Checks your current screen size against the screen sizes that it can run on
+        if (Arrays.equals(screenModes[0], currentScreenMode)) {
+            System.out.println("you are running 1920x1080p");
+            return new Dimension(screenModes[0][0], screenModes[0][1]);
+
+        } else if (Arrays.equals(screenModes[1], currentScreenMode)) {
+            System.out.println("you are running 1440x900p");
+            return new Dimension(screenModes[1][0], screenModes[1][1]);
+
+        } else {
+            // Not running on a supported screen size
+            throw new RuntimeException("your screen configuration is not supported");
+        }
+    }

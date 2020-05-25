@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basilisk Snake</title>
+</head>
+
+<body>
+    <p style="text-align: center; padding-top: 20vh;">You can now close this tab</p>
+    <p style="text-align: center;">(If the google snake game did not open, click <a href="" onclick="go()">here</a> or
+        check your popup blocker)</p>
+</body>
+<script>
+    function go() {
+        window.open("https://www.google.com/fbx?fbx=snake_arcade", "customWindow", "width=600, height=600, top=" + (screen.height - 600) + ", left=0");
+    }
+    go();
+</script>
+
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+     "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+     "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- suppress certain checks on all files -->
+    <suppress files="." checks="ImportOrder"/>
+
+    <suppress files="src/main/java/org/leonitousconforti/basilisk/Basilisk.java" checks="NoWhitespaceAfter"/>
+    <suppress files="src/main/java/org/leonitousconforti/basilisk/Basilisk.java" checks="AvoidStarImport"/>
+</suppressions>
