@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.Test;
 import org.leonitousconforti.basilisk.core.Algorithms;
 
 /**
@@ -15,7 +15,9 @@ class AlgorithmsTest {
     // Test object
     private final Algorithms algorithms = new Algorithms();
 
-    @Test
+    /**
+     * @Test
+     */
     void testLoadingOutSourcedAlgorithm()
             throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         // Attempt to load an algorithm not in the jar/class path
